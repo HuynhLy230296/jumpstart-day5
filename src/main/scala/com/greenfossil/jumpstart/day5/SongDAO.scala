@@ -11,7 +11,10 @@ object SongDAO:
   /**
    * Queries the first song that matches the where clause
    */
-  def findSong(whereFn: SONG_TABLE.type => WhereClause)(using connection: Connection): Try[Song] = ???
+  def findSong(whereFn: SONG_TABLE.type => WhereClause)(using connection: Connection): Try[Song] = {
+    val select: SelectStatement = SONG_TABLE.select(s => s.title).where(whereFn(SONG_TABLE))
+    select.executeFirst[Song]
+  }
 
   /**
    * Queries `Song.json` for the value of the `img_url` field
